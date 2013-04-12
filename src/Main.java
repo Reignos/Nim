@@ -13,11 +13,13 @@ public class Main {
 		}
 		
 		public void addScore(){
-			score++;
+			if(score < 10)
+				score++;
 		}
 		
 		public void subScore(){
-			score--;
+			if(score > -10)
+				score--;
 		}
 		
 		public State getState(){
@@ -63,7 +65,7 @@ public class Main {
 			playerTwo = new ArrayList<State>();
 			State endState = new State(0,0,0);
 			boolean gameGoing = true;
-			while(gameGoing){
+			do {
 				currentState = compTurn(currentState);
 				if(currentState.equals(endState)){
 					gameGoing = false;
@@ -82,7 +84,7 @@ public class Main {
 					break;
 				}
 				playerTwo.add(currentState);
-			}
+			} while(gameGoing);
 		}
 		System.out.println("Computers have finished playing " + numberOfTimes + " times");
 		System.out.println("Computer player 1 won " + compOneScore + " times");
@@ -105,7 +107,7 @@ public class Main {
 		State endState = new State(0,0,0);
 		System.out.println("To make a move, type the row(1-3) and press enter, then type the amount to take and press enter");
 		boolean gameGoing = true;
-		while(gameGoing){
+		do {
 			currentState = playerTurn(currentState);
 			if(currentState.equals(endState)){
 				System.out.println("Computer wins!");
@@ -124,7 +126,7 @@ public class Main {
 				break;
 			}
 			playerTwo.add(currentState);
-		}
+		} while(gameGoing);
 		menu();
 	}
 	
