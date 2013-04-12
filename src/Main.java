@@ -38,7 +38,7 @@ public class Main {
 	public Main(){
 		stateValues = new ArrayList<StateScore>();
 		populateValues();
-		menu();
+		displayMenu();
 	}
 	
 	private void printState(State s){
@@ -56,7 +56,7 @@ public class Main {
 		System.out.println();
 	}
 	
-	private void compVsComp(int numberOfTimes){
+	private void computerVsComputer(int numberOfTimes){
 		int compOneScore = 0;
 		int compTwoScore = 0;
 		for(int i = 0; i < numberOfTimes; i++){
@@ -66,19 +66,19 @@ public class Main {
 			State endState = new State(0,0,0);
 			boolean gameGoing = true;
 			do {
-				currentState = compTurn(currentState);
+				currentState = computerTurn(currentState);
 				if(currentState.equals(endState)){
 					gameGoing = false;
-					subValues(playerOne);
+					subtractValues(playerOne);
 					addValues(playerTwo);
 					compTwoScore++;
 					break;
 				}
 				playerOne.add(currentState);
-				currentState = compTurn(currentState);
+				currentState = computerTurn(currentState);
 				if(currentState.equals(endState)){
 					gameGoing = false;
-					subValues(playerTwo);
+					subtractValues(playerTwo);
 					addValues(playerOne);
 					compOneScore++;
 					break;
@@ -100,7 +100,7 @@ public class Main {
 		}
 	}
 	
-	private void playerVsComp(){
+	private void playerVsComputer(){
 		currentState = new State();
 		playerOne = new ArrayList<State>();
 		playerTwo = new ArrayList<State>();
@@ -112,25 +112,25 @@ public class Main {
 			if(currentState.equals(endState)){
 				System.out.println("Computer wins!");
 				gameGoing = false;
-				subValues(playerOne);
+				subtractValues(playerOne);
 				addValues(playerTwo);
 				break;
 			}
 			playerOne.add(currentState);
-			currentState = compTurn(currentState);
+			currentState = computerTurn(currentState);
 			if(currentState.equals(endState)){
 				System.out.println("Player wins!");
 				gameGoing = false;
-				subValues(playerTwo);
+				subtractValues(playerTwo);
 				addValues(playerOne);
 				break;
 			}
 			playerTwo.add(currentState);
 		} while(gameGoing);
-		menu();
+		displayMenu();
 	}
 	
-	private void subValues(List<State> stateList) {
+	private void subtractValues(List<State> stateList) {
 		for(State s : stateList){
 			for(StateScore ss : stateValues){
 				if(ss.getState().equals(s)){
@@ -152,8 +152,8 @@ public class Main {
 		}
 	}
 
-	private State compTurn(State s){
-		List<State> possible = returnStateList(s);
+	private State computerTurn(State s){
+		List<State> possible = returnPossibleStateList(s);
 		State nextTurn = new State();
 		int score = Integer.MIN_VALUE;
 		for(State p : possible){
@@ -184,7 +184,7 @@ public class Main {
 		boolean emptyRow = true;
 		int row = 0;
 		while(emptyRow){
-			row = getAnswer("Row: ", 1, 3);
+			row = getRangedIntegerAnswer("Row: ", 1, 3);
 			if(row == 1){
 				if(s.getrow1() == 0){
 					System.out.println("Pick a non empty row");
@@ -212,15 +212,15 @@ public class Main {
 		}
 		int num = 0;
 		if(row == 1){
-			num = getAnswer("Amount: ", 1, s.getrow1());
+			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow1());
 			newState = new State(s.getrow1() - num, s.getrow2(), s.getrow3());
 		}
 		else if(row == 2){
-			num = getAnswer("Amount: ", 1, s.getrow2());
+			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow2());
 			newState = new State(s.getrow1(), s.getrow2() - num, s.getrow3());
 		}
 		else{
-			num = getAnswer("Amount: ", 1, s.getrow3());
+			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow3());
 			newState = new State(s.getrow1(), s.getrow2(), s.getrow3() - num);
 		}
 		return newState;
@@ -236,7 +236,7 @@ public class Main {
 		}
 	}
 	
-	private ArrayList<State> returnStateList(State s) {
+	private ArrayList<State> returnPossibleStateList(State s) {
 		ArrayList<State> listOfStates = new ArrayList<State>();
 		for(int i = 0; i <= s.getrow1(); i++){
 			State newState = new State(i, s.getrow2(), s.getrow3());
@@ -260,20 +260,20 @@ public class Main {
 		return listOfStates;
 	}
 
-	private void menu(){
+	private void displayMenu(){
 		boolean running = true;
 		while(running){
 			String display = "What would you like to do?\n";
 			display += "1. Play against a computer\n";
 			display += "2. Computer against a computer\n";
 			display += "3. Quit\n";
-			int choice = getAnswer(display, 1, 3);
+			int choice = getRangedIntegerAnswer(display, 1, 3);
 			if(choice == 1){
-				playerVsComp();
+				playerVsComputer();
 			}
 			else if(choice == 2){
 				String dis = "How many times would you like the computers to play?";
-				compVsComp(getAnswer(dis, 1, Integer.MAX_VALUE));
+				computerVsComputer(getRangedIntegerAnswer(dis, 1, Integer.MAX_VALUE));
 			}
 			else{
 				running = false;
@@ -282,7 +282,7 @@ public class Main {
 		}
 	}
 	
-	private int getAnswer(String s, int low, int high){
+	private int getRangedIntegerAnswer(String s, int low, int high){
 		int answer = 0;
 		boolean ci = true;
 		System.out.print(s);
