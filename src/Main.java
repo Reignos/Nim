@@ -44,19 +44,66 @@ public class Main {
 		scanner.close();
 	}
 	
-	private void printState(State s){
-		for(int i = 0; i < s.getRowValue(1); i++){
-			System.out.print("X");
+	private void populateStateValues() {
+		for(int i = 0; i <= 3; i++){
+			for(int j = 0; j <= 5; j++){
+				for(int k = 0; k <= 7; k++){
+					stateValues.add(new StateScore(new State(i, j, k)));
+				}
+			}
 		}
-		System.out.println();
-		for(int i = 0; i < s.getRowValue(2); i++){
-			System.out.print("X");
-		}
-		System.out.println();
-		for(int i = 0; i < s.getRowValue(3); i++){
-			System.out.print("X");
-		}
-		System.out.println();
+	}
+	
+	private void displayMenu(){
+		boolean running = true;
+		do {
+			String display = "What would you like to do?\n";
+			display += "1. Play against a computer\n";
+			display += "2. Computer against a computer\n";
+			display += "3. Quit\n";
+			int choice = getRangedIntegerAnswer(display, 1, 3);
+			if(choice == 1){
+				playerVsComputer();
+			}
+			else if(choice == 2){
+				String dis = "How many times would you like the computers to play?";
+				computerVsComputer(getRangedIntegerAnswer(dis, 1, Integer.MAX_VALUE));
+			}
+			else{
+				running = false;
+				break;
+			}
+		} while(running);
+	}
+	
+	private void playerVsComputer(){
+		currentState = new State();
+		playerOne = new ArrayList<State>();
+		playerTwo = new ArrayList<State>();
+		State endState = new State(0,0,0);
+		System.out.println("To make a move, type the row(1-3) and press enter, then type the amount to take and press enter");
+		boolean gameGoing = true;
+		do {
+			currentState = playerTurn(currentState);
+			if(currentState.equals(endState)){
+				System.out.println("Computer wins!");
+				gameGoing = false;
+				subtractValues(playerOne);
+				addValues(playerTwo);
+				break;
+			}
+			playerOne.add(currentState);
+			currentState = computerTurn(currentState);
+			if(currentState.equals(endState)){
+				System.out.println("Player wins!");
+				gameGoing = false;
+				subtractValues(playerTwo);
+				addValues(playerOne);
+				break;
+			}
+			playerTwo.add(currentState);
+		} while(gameGoing);
+		displayMenu();
 	}
 	
 	private void computerVsComputer(int numberOfTimes){
@@ -103,84 +150,21 @@ public class Main {
 		}
 	}
 	
-	private void playerVsComputer(){
-		currentState = new State();
-		playerOne = new ArrayList<State>();
-		playerTwo = new ArrayList<State>();
-		State endState = new State(0,0,0);
-		System.out.println("To make a move, type the row(1-3) and press enter, then type the amount to take and press enter");
-		boolean gameGoing = true;
-		do {
-			currentState = playerTurn(currentState);
-			if(currentState.equals(endState)){
-				System.out.println("Computer wins!");
-				gameGoing = false;
-				subtractValues(playerOne);
-				addValues(playerTwo);
-				break;
-			}
-			playerOne.add(currentState);
-			currentState = computerTurn(currentState);
-			if(currentState.equals(endState)){
-				System.out.println("Player wins!");
-				gameGoing = false;
-				subtractValues(playerTwo);
-				addValues(playerOne);
-				break;
-			}
-			playerTwo.add(currentState);
-		} while(gameGoing);
-		displayMenu();
+	private void printState(State s){
+		for(int i = 0; i < s.getRowValue(1); i++){
+			System.out.print("X");
+		}
+		System.out.println();
+		for(int i = 0; i < s.getRowValue(2); i++){
+			System.out.print("X");
+		}
+		System.out.println();
+		for(int i = 0; i < s.getRowValue(3); i++){
+			System.out.print("X");
+		}
+		System.out.println();
 	}
 	
-	private void subtractValues(List<State> stateList) {
-		for(State s : stateList){
-			for(StateScore ss : stateValues){
-				if(ss.getState().equals(s)){
-					ss.subScore();
-					break;
-				}
-			}
-		}
-	}
-	
-	private void addValues(List<State> stateList) {
-		for(State s : stateList){
-			for(StateScore ss : stateValues){
-				if(ss.getState().equals(s)){
-					ss.addScore();
-					break;
-				}
-			}
-		}
-	}
-
-	private State computerTurn(State s){
-		List<State> possible = returnPossibleStateList(s);
-		State nextTurn = new State();
-		int score = Integer.MIN_VALUE;
-		for(State p : possible){
-			for(StateScore values : stateValues){
-				if(p.equals(values.getState())){
-					if(values.getScore() > score){
-						score = values.getScore();
-						nextTurn = p;
-						break;
-					}
-					else if(values.getScore() == score){
-						score = values.getScore();
-						Random r = new Random();
-						if(r.nextBoolean()){
-							nextTurn = p;
-						}
-						break;
-					}
-				}
-			}
-		}
-		return nextTurn;
-	}
-
 	private State playerTurn(State s){
 		printState(s);
 		State newState;
@@ -227,14 +211,30 @@ public class Main {
 		return newState;
 	}
 	
-	private void populateStateValues() {
-		for(int i = 0; i <= 3; i++){
-			for(int j = 0; j <= 5; j++){
-				for(int k = 0; k <= 7; k++){
-					stateValues.add(new StateScore(new State(i, j, k)));
+	private State computerTurn(State s){
+		List<State> possible = returnPossibleStateList(s);
+		State nextTurn = new State();
+		int score = Integer.MIN_VALUE;
+		for(State p : possible){
+			for(StateScore values : stateValues){
+				if(p.equals(values.getState())){
+					if(values.getScore() > score){
+						score = values.getScore();
+						nextTurn = p;
+						break;
+					}
+					else if(values.getScore() == score){
+						score = values.getScore();
+						Random r = new Random();
+						if(r.nextBoolean()){
+							nextTurn = p;
+						}
+						break;
+					}
 				}
 			}
 		}
+		return nextTurn;
 	}
 	
 	private ArrayList<State> returnPossibleStateList(State s) {
@@ -260,29 +260,29 @@ public class Main {
 		
 		return listOfStates;
 	}
-
-	private void displayMenu(){
-		boolean running = true;
-		do {
-			String display = "What would you like to do?\n";
-			display += "1. Play against a computer\n";
-			display += "2. Computer against a computer\n";
-			display += "3. Quit\n";
-			int choice = getRangedIntegerAnswer(display, 1, 3);
-			if(choice == 1){
-				playerVsComputer();
+	
+	private void addValues(List<State> stateList) {
+		for(State s : stateList){
+			for(StateScore ss : stateValues){
+				if(ss.getState().equals(s)){
+					ss.addScore();
+					break;
+				}
 			}
-			else if(choice == 2){
-				String dis = "How many times would you like the computers to play?";
-				computerVsComputer(getRangedIntegerAnswer(dis, 1, Integer.MAX_VALUE));
-			}
-			else{
-				running = false;
-				break;
-			}
-		} while(running);
+		}
 	}
 	
+	private void subtractValues(List<State> stateList) {
+		for(State s : stateList){
+			for(StateScore ss : stateValues){
+				if(ss.getState().equals(s)){
+					ss.subScore();
+					break;
+				}
+			}
+		}
+	}
+
 	private int getRangedIntegerAnswer(String s, int low, int high){
 		int answer = 0;
 		boolean hasntAnsweredCorrectly = true;
