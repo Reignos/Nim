@@ -17,16 +17,18 @@ public class State {
 		row3 = r3;
 	}
 	
-	public int getrow1(){
-		return row1;
-	}
-	
-	public int getrow2(){
-		return row2;
-	}
-	
-	public int getrow3(){
-		return row3;
+	public int getRowValue(int r){
+		int returnRow = 0;
+		if(r == 1){
+			returnRow = row1;
+		}
+		else if(r == 2){
+			returnRow = row2;
+		}
+		else if(r == 3){
+			returnRow = row3;
+		}
+		return returnRow;
 	}
 	
 	@Override

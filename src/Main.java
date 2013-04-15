@@ -34,23 +34,26 @@ public class Main {
 	private List<StateScore> stateValues;
 	private List<State> playerOne;
 	private List<State> playerTwo;
+	private Scanner scanner;
 	
 	public Main(){
+		scanner = new Scanner(System.in);
 		stateValues = new ArrayList<StateScore>();
-		populateValues();
+		populateStateValues();
 		displayMenu();
+		scanner.close();
 	}
 	
 	private void printState(State s){
-		for(int i = 0; i < s.getrow1(); i++){
+		for(int i = 0; i < s.getRowValue(1); i++){
 			System.out.print("X");
 		}
 		System.out.println();
-		for(int i = 0; i < s.getrow2(); i++){
+		for(int i = 0; i < s.getRowValue(2); i++){
 			System.out.print("X");
 		}
 		System.out.println();
-		for(int i = 0; i < s.getrow3(); i++){
+		for(int i = 0; i < s.getRowValue(3); i++){
 			System.out.print("X");
 		}
 		System.out.println();
@@ -183,10 +186,10 @@ public class Main {
 		State newState;
 		boolean emptyRow = true;
 		int row = 0;
-		while(emptyRow){
+		do {
 			row = getRangedIntegerAnswer("Row: ", 1, 3);
 			if(row == 1){
-				if(s.getrow1() == 0){
+				if(s.getRowValue(1) == 0){
 					System.out.println("Pick a non empty row");
 				}
 				else{
@@ -194,7 +197,7 @@ public class Main {
 				}
 			}
 			else if(row == 2){
-				if(s.getrow2() == 0){
+				if(s.getRowValue(2) == 0){
 					System.out.println("Pick a non empty row");
 				}
 				else{
@@ -202,31 +205,29 @@ public class Main {
 				}
 			}
 			else {
-				if(s.getrow3() == 0){
+				if(s.getRowValue(3) == 0){
 					System.out.println("Pick a non empty row");
 				}
 				else{
 					emptyRow = false;
 				}
 			}
-		}
+		} while(emptyRow);
 		int num = 0;
+		num = getRangedIntegerAnswer("Amount: ", 1, s.getRowValue(row));
 		if(row == 1){
-			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow1());
-			newState = new State(s.getrow1() - num, s.getrow2(), s.getrow3());
+			newState = new State(s.getRowValue(1) - num, s.getRowValue(2), s.getRowValue(3));
 		}
 		else if(row == 2){
-			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow2());
-			newState = new State(s.getrow1(), s.getrow2() - num, s.getrow3());
+			newState = new State(s.getRowValue(1), s.getRowValue(2) - num, s.getRowValue(3));
 		}
 		else{
-			num = getRangedIntegerAnswer("Amount: ", 1, s.getrow3());
-			newState = new State(s.getrow1(), s.getrow2(), s.getrow3() - num);
+			newState = new State(s.getRowValue(1), s.getRowValue(2), s.getRowValue(3) - num);
 		}
 		return newState;
 	}
 	
-	private void populateValues() {
+	private void populateStateValues() {
 		for(int i = 0; i <= 3; i++){
 			for(int j = 0; j <= 5; j++){
 				for(int k = 0; k <= 7; k++){
@@ -238,20 +239,20 @@ public class Main {
 	
 	private ArrayList<State> returnPossibleStateList(State s) {
 		ArrayList<State> listOfStates = new ArrayList<State>();
-		for(int i = 0; i <= s.getrow1(); i++){
-			State newState = new State(i, s.getrow2(), s.getrow3());
+		for(int i = 0; i <= s.getRowValue(1); i++){
+			State newState = new State(i, s.getRowValue(2), s.getRowValue(3));
 			if(!newState.equals(s)){
 				listOfStates.add(newState);
 			}
 		}
-		for(int j = 0; j <= s.getrow2(); j++){
-			State newState = new State(s.getrow1(), j, s.getrow3());
+		for(int j = 0; j <= s.getRowValue(2); j++){
+			State newState = new State(s.getRowValue(1), j, s.getRowValue(3));
 			if(!newState.equals(s)){
 				listOfStates.add(newState);
 			}
 		}
-		for(int k = 0; k <= s.getrow3(); k++){
-			State newState = new State(s.getrow1(), s.getrow2(), k);
+		for(int k = 0; k <= s.getRowValue(3); k++){
+			State newState = new State(s.getRowValue(1), s.getRowValue(2), k);
 			if(!newState.equals(s)){
 				listOfStates.add(newState);
 			}
@@ -262,7 +263,7 @@ public class Main {
 
 	private void displayMenu(){
 		boolean running = true;
-		while(running){
+		do {
 			String display = "What would you like to do?\n";
 			display += "1. Play against a computer\n";
 			display += "2. Computer against a computer\n";
@@ -279,20 +280,19 @@ public class Main {
 				running = false;
 				break;
 			}
-		}
+		} while(running);
 	}
 	
 	private int getRangedIntegerAnswer(String s, int low, int high){
 		int answer = 0;
-		boolean ci = true;
+		boolean hasntAnsweredCorrectly = true;
 		System.out.print(s);
-		while(ci){
-			Scanner scan = new Scanner(System.in);
-			String input = scan.next();
+		do {
+			String input = scanner.next();
 			try{
 				answer = Integer.parseInt(input);
 				if(answer >= low && answer <= high){
-					ci = false;
+					hasntAnsweredCorrectly = false;
 				}
 				else{
 					System.out.println("Option not availiable");
@@ -301,7 +301,7 @@ public class Main {
 			catch(Exception e){
 				System.out.println("Please enter a number");
 			}
-		}
+		} while(hasntAnsweredCorrectly);
 		return answer;
 	}
 	
