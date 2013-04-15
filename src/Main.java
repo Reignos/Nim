@@ -36,7 +36,6 @@ public class Main {
 	private List<State> playerTwo;
 	private Scanner scanner;
 	
-	
 	public Main(){
 		scanner = new Scanner(System.in);
 		stateValues = new ArrayList<StateScore>();
