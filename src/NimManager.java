@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class Main {
+public class NimManager {
 
 	private class StateScore{
 		
@@ -37,12 +37,14 @@ public class Main {
 	private Scanner scanner;
 	
 	
-	public Main(){
+	public NimManager(){
 		scanner = new Scanner(System.in);
 		stateValues = new ArrayList<StateScore>();
 		populateStateValues();
+	}
+	
+	public void run(){
 		displayMenu();
-		scanner.close();
 	}
 	
 	private void populateStateValues() {
@@ -151,64 +153,28 @@ public class Main {
 		}
 	}
 	
-	private void printState(State s){
-		for(int i = 0; i < s.getRowValue(1); i++){
-			System.out.print("X");
-		}
-		System.out.println();
-		for(int i = 0; i < s.getRowValue(2); i++){
-			System.out.print("X");
-		}
-		System.out.println();
-		for(int i = 0; i < s.getRowValue(3); i++){
-			System.out.print("X");
-		}
-		System.out.println();
-	}
-	
 	private State playerTurn(State s){
-		printState(s);
+		System.out.println(s.toString());
 		State newState;
 		boolean emptyRow = true;
 		int row = 0;
 		do {
 			row = getRangedIntegerAnswer("Row: ", 1, 3);
-			if(row == 1){
-				if(s.getRowValue(1) == 0){
-					System.out.println("Pick a non empty row");
-				}
-				else{
-					emptyRow = false;
-				}
+			if(s.getRowValue(row) == 0){
+				System.out.println("Pick a non empty row");
 			}
-			else if(row == 2){
-				if(s.getRowValue(2) == 0){
-					System.out.println("Pick a non empty row");
-				}
-				else{
-					emptyRow = false;
-				}
-			}
-			else {
-				if(s.getRowValue(3) == 0){
-					System.out.println("Pick a non empty row");
-				}
-				else{
-					emptyRow = false;
-				}
+			else{
+				emptyRow = false;
 			}
 		} while(emptyRow);
 		int num = 0;
 		num = getRangedIntegerAnswer("Amount: ", 1, s.getRowValue(row));
-		if(row == 1){
-			newState = new State(s.getRowValue(1) - num, s.getRowValue(2), s.getRowValue(3));
-		}
-		else if(row == 2){
-			newState = new State(s.getRowValue(1), s.getRowValue(2) - num, s.getRowValue(3));
-		}
-		else{
-			newState = new State(s.getRowValue(1), s.getRowValue(2), s.getRowValue(3) - num);
-		}
+		int[] newRows = new int[3];
+		newRows[0] = s.getRowValue(1);
+		newRows[1] = s.getRowValue(2);
+		newRows[2] = s.getRowValue(3);
+		newRows[row] -= num;
+		newState = new State(newRows);
 		return newState;
 	}
 	
@@ -284,10 +250,10 @@ public class Main {
 		}
 	}
 
-	private int getRangedIntegerAnswer(String s, int low, int high){
+	private int getRangedIntegerAnswer(String prompt, int low, int high){
 		int answer = 0;
 		boolean hasntAnsweredCorrectly = true;
-		System.out.print(s);
+		System.out.print(prompt);
 		do {
 			String input = scanner.next();
 			try{
@@ -310,7 +276,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new Main();
+		NimManager nm = new NimManager();
+		nm.run();
 	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		scanner.close();
+	};
 
 }
