@@ -1,3 +1,5 @@
+package Nim;
+
 import java.util.*;
 
 
