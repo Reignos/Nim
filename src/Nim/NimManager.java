@@ -5,33 +5,6 @@ import java.util.*;
 
 public class NimManager {
 
-	private class StateScore{
-		
-		private State state;
-		private int score;
-		public StateScore(State s){
-			state = s;
-			score = 0;
-		}
-		
-		public void addScore(){
-			if(score < 10)
-				score++;
-		}
-		
-		public void subScore(){
-			if(score > -10)
-				score--;
-		}
-		
-		public State getState(){
-			return state;
-		}
-		
-		public int getScore(){
-			return score;
-		}
-	}
 	private State currentState;
 	private List<StateScore> stateValues;
 	private List<State> playerOne;
@@ -62,17 +35,17 @@ public class NimManager {
 	private void displayMenu(){
 		boolean running = true;
 		do {
-			String display = "What would you like to do?\n";
-			display += "1. Play against a computer\n";
-			display += "2. Computer against a computer\n";
-			display += "3. Quit\n";
-			int choice = getRangedIntegerAnswer(display, 1, 3);
+			String displayMenuQuestions = "What would you like to do?\n";
+			displayMenuQuestions += "1. Play against a computer\n";
+			displayMenuQuestions += "2. Computer against a computer\n";
+			displayMenuQuestions += "3. Quit\n";
+			int choice = GetInputFromUser.getRangedIntegerAnswer(displayMenuQuestions, 1, 3, scanner);
 			if(choice == 1){
 				playerVsComputer();
 			}
 			else if(choice == 2){
-				String dis = "How many times would you like the computers to play?";
-				computerVsComputer(getRangedIntegerAnswer(dis, 1, Integer.MAX_VALUE));
+				String computerChoiceDisplay = "How many times would you like the computers to play?";
+				computerVsComputer(GetInputFromUser.getRangedIntegerAnswer(computerChoiceDisplay, 1, Integer.MAX_VALUE, scanner));
 			}
 			else{
 				running = false;
@@ -161,7 +134,7 @@ public class NimManager {
 		boolean emptyRow = true;
 		int row = 0;
 		do {
-			row = getRangedIntegerAnswer("Row: ", 1, 3);
+			row = GetInputFromUser.getRangedIntegerAnswer("Row: ", 1, 3, scanner);
 			if(s.getRowValue(row) == 0){
 				System.out.println("Pick a non empty row");
 			}
@@ -170,7 +143,7 @@ public class NimManager {
 			}
 		} while(emptyRow);
 		int num = 0;
-		num = getRangedIntegerAnswer("Amount: ", 1, s.getRowValue(row));
+		num = GetInputFromUser.getRangedIntegerAnswer("Amount: ", 1, s.getRowValue(row), scanner);
 		int[] newRows = new int[3];
 		newRows[0] = s.getRowValue(1);
 		newRows[1] = s.getRowValue(2);
@@ -180,8 +153,8 @@ public class NimManager {
 		return newState;
 	}
 	
-	private State computerTurn(State s){
-		List<State> possible = returnPossibleStateList(s);
+	private State computerTurn(State currentState){
+		List<State> possible = returnPossibleStateList(currentState);
 		State nextTurn = new State();
 		int score = Integer.MIN_VALUE;
 		for(State p : possible){
@@ -250,28 +223,6 @@ public class NimManager {
 				}
 			}
 		}
-	}
-
-	private int getRangedIntegerAnswer(String prompt, int low, int high){
-		int answer = 0;
-		boolean hasntAnsweredCorrectly = true;
-		System.out.print(prompt);
-		do {
-			String input = scanner.next();
-			try{
-				answer = Integer.parseInt(input);
-				if(answer >= low && answer <= high){
-					hasntAnsweredCorrectly = false;
-				}
-				else{
-					System.out.println("Option not availiable");
-				}
-			}
-			catch(Exception e){
-				System.out.println("Please enter a number");
-			}
-		} while(hasntAnsweredCorrectly);
-		return answer;
 	}
 	
 	/**
