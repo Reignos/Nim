@@ -20,7 +20,7 @@ public class State {
 		rows = new int[3];
 		rows[0] = row1;
 		rows[1] = row2;
-		rows[3] = row3;
+		rows[2] = row3;
 	}
 	
 	public int getRowValue(int r){
@@ -28,19 +28,19 @@ public class State {
 	}
 	
 	public String toString(){
-		String returnString = "";
+		String returnString = "1: ";
 		for(int i = 0; i < getRowValue(1); i++){
 			returnString += "X";
 		}
-		returnString += "/n";
+		returnString += "\n2: ";
 		for(int i = 0; i < getRowValue(2); i++){
 			returnString += "X";
 		}
-		returnString += "/n";
+		returnString += "\n3: ";
 		for(int i = 0; i < getRowValue(3); i++){
 			returnString += "X";
 		}
-		returnString += "/n";
+		returnString += "\n";
 		return returnString;
 	}
 	
