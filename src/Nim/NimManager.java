@@ -6,11 +6,9 @@ import java.util.*;
 public class NimManager {
 
 	private List<StateScore> stateValues;
-	private Scanner scanner;
 	private final State endState = new State(0,0,0);
 	
 	public NimManager(){
-		scanner = new Scanner(System.in);
 		stateValues = new ArrayList<StateScore>();
 		populateStateValues();
 	}
@@ -36,13 +34,13 @@ public class NimManager {
 			displayMenuQuestions += "1. Play against a computer\n";
 			displayMenuQuestions += "2. Computer against a computer\n";
 			displayMenuQuestions += "3. Quit\n";
-			int choice = GetInputFromUser.getRangedIntegerAnswer(displayMenuQuestions, 1, 3, scanner);
+			int choice = CommunicateWithUser.getRangedIntegerAnswer(displayMenuQuestions, 1, 3);
 			if(choice == 1){
 				playerVsComputerSetUp();
 			}
 			else if(choice == 2){
 				String computerChoiceDisplay = "How many times would you like the computers to play?";
-				computerVsComputerSetUp(GetInputFromUser.getRangedIntegerAnswer(computerChoiceDisplay, 1, Integer.MAX_VALUE, scanner));
+				computerVsComputerSetUp(CommunicateWithUser.getRangedIntegerAnswer(computerChoiceDisplay, 1, Integer.MAX_VALUE));
 			}
 			else{
 				running = false;
@@ -54,9 +52,9 @@ public class NimManager {
 	private void playerVsComputerSetUp(){
 		HumanPlayer human = new HumanPlayer();
 		ComputerPlayer computer = new ComputerPlayer(stateValues, "Computer");
-		System.out.println("To make a move, type the row(1-3) and press enter, then type the amount to take and press enter");
+		CommunicateWithUser.println("To make a move, type the row(1-3) and press enter, then type the amount to take and press enter");
 		Player winner = playGame(human, computer);
-		System.out.println(winner.getName() + " won!");
+		CommunicateWithUser.println(winner.getName() + " won!");
 	}
 	
 	private void computerVsComputerSetUp(int numberOfTimes){
@@ -80,9 +78,9 @@ public class NimManager {
 				compTwoScore++;
 			}
 		}
-		System.out.println("Computers have finished playing " + numberOfTimes + " times");
-		System.out.println("Computer player 1 won " + compOneScore + " times");
-		System.out.println("Computer player 2 won " + compTwoScore + " times");
+		CommunicateWithUser.println("Computers have finished playing " + numberOfTimes + " times");
+		CommunicateWithUser.println("Computer player 1 won " + compOneScore + " times");
+		CommunicateWithUser.println("Computer player 2 won " + compTwoScore + " times");
 		String toPrintWhoWon = "Computer player";
 		if(compOneScore > compTwoScore){
 			toPrintWhoWon += " 1 wins!";
@@ -93,7 +91,7 @@ public class NimManager {
 		else{
 			toPrintWhoWon += "s tied!";
 		}
-		System.out.println(toPrintWhoWon);
+		CommunicateWithUser.println(toPrintWhoWon);
 	}
 	
 	private Player playGame(Player playerOne, Player playerTwo){
@@ -101,7 +99,7 @@ public class NimManager {
 		Player winner = new HumanPlayer();
 		boolean gameGoing = true;
 		do {
-			currentState = playerOne.turn(currentState, scanner);
+			currentState = playerOne.turn(currentState);
 			if(currentState.equals(endState)){
 				gameGoing = false;
 				subtractValues(playerOne.getTurnsMade());
@@ -109,7 +107,7 @@ public class NimManager {
 				winner = playerTwo;
 				break;
 			}
-			currentState = playerTwo.turn(currentState, scanner);
+			currentState = playerTwo.turn(currentState);
 			if(currentState.equals(endState)){
 				gameGoing = false;
 				subtractValues(playerTwo.getTurnsMade());
@@ -151,9 +149,6 @@ public class NimManager {
 		nm.run();
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		scanner.close();
-	};
+	
 
 }
