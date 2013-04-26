@@ -45,12 +45,14 @@ public class State {
 	}
 	
 	@Override
+	//Auto Generated
 	protected Object clone() throws CloneNotSupportedException {
 		
 		return new State(rows[0], rows[1], rows[2]);
 	}
 
 	@Override
+	//Auto Generated
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
