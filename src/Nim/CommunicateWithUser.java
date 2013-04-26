@@ -28,16 +28,10 @@ public class CommunicateWithUser {
 		boolean hasntAnsweredCorrectly = true;
 		print(prompt);
 		do {
-			Pattern regexNumberConfirmer = Pattern.compile("[\\d]+");
+			Pattern regexNumberConfirmer = Pattern.compile("^[0-9]+$");
 			String input = scanner.next();
 			Matcher matchString = regexNumberConfirmer.matcher(input);
-			Boolean onlyNumbers = true;
-			for(int i = 0; i < input.length(); i++){
-				if(onlyNumbers){
-					onlyNumbers = matchString.find();
-				}
-			}
-			if(onlyNumbers){
+			if(matchString.find()){
 				answer = Integer.parseInt(input);
 				if(answer >= low && answer <= high){
 					hasntAnsweredCorrectly = false;
@@ -52,22 +46,4 @@ public class CommunicateWithUser {
 		} while(hasntAnsweredCorrectly);
 		return answer;
 	}
-	
-	/*
-	 * 
-			try{
-				String input = scanner.next();
-				answer = Integer.parseInt(input);
-				if(answer >= low && answer <= high){
-					hasntAnsweredCorrectly = false;
-				}
-				else{
-					println("Option not availiable");
-				}
-			} catch(NumberFormatException nfe){
-				println("Please input a number");
-			}
-	 * 
-	 * 
-	 */
 }
